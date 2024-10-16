@@ -1,0 +1,6 @@
+<h2>支出一覧</h2>
+<ul>
+  {% for expense in expenses %}
+    <li>{{ expense.date }} - {{ expense.category }} - {{ expense.amount }}</li>
+  {% endfor %}
+</ul>
