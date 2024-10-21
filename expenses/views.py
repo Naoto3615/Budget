@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import ExpenseForm
 from .models import Expense
 from django.contrib.auth.decorators import login_required
@@ -32,6 +32,20 @@ def expense_list(request):
     category_totals = expenses.values('category__name').annotate(total=Sum('amount'))
     print(category_totals)
     return render(request, 'expenses/expense_list.html', {'expenses': expenses, 'category_totals': category_totals})
+
+
+@login_required
+def delete_expense(request, id):
+    # 削除対象の費用を取得
+    expense = get_object_or_404(Expense, id=id, user=request.user)
+
+    if request.method == 'POST':
+        # POSTリクエストの場合に削除を実行
+        expense.delete()
+        return redirect('expense_list')  # 削除後に費用一覧にリダイレクト
+
+    # 削除確認ページを表示
+    return render(request, 'expenses/confirm_delete.html', {'expense': expense})
 
 
 def signup(request):
