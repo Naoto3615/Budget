@@ -7,18 +7,24 @@
     <h2 class="text-3xl font-bold mb-6 text-gray-800">費用一覧</h2>
 
     <!-- フレックスボックスのレイアウトに変更 -->
-    <div class="flex space-x-6">
+    <div class="flex justify-between">  <!-- `justify-between` で左右に広げる -->
         <!-- 費用一覧 -->
-        <div class="w-1/2">
+        <div class="w-1/2 mr-8">  <!-- `mr-8`で右方向のマージンを追加 -->
             <ul class="space-y-4">
                 {% for expense in expenses %}
                     <li class="bg-white p-4 rounded-lg shadow-md flex justify-between items-center">
                         <div>
-                            <p class="text-lg font-semibold text-gray-800">{{ expense.user }}</p>
                             <p class="text-lg font-semibold text-gray-800">{{ expense.category }}</p>
                             <p class="text-sm text-gray-600">{{ expense.date }}</p>
                         </div>
-                        <p class="text-xl font-bold text-indigo-600">{{ expense.amount }}円</p>
+                        <div class="flex items-center space-x-4">
+                            <p class="text-xl font-bold text-indigo-600">{{ expense.amount }}円</p>
+                            <!-- 削除ボタン -->
+                            <form method="post" action="{% url 'delete_expense' expense.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="text-red-600 hover:underline">削除</button>
+                            </form>
+                        </div>
                     </li>
                 {% empty %}
                     <p class="text-center text-gray-500">費用が登録されていません。</p>
@@ -27,7 +33,7 @@
         </div>
 
         <!-- 円グラフ -->
-        <div class="w-1/2">
+        <div class="w-1/2 ml-8">  <!-- `ml-8`で左方向のマージンを追加 -->
             <h3 class="text-xl font-bold">カテゴリごとの支出</h3>
             <canvas id="expenseChart" width="400" height="400"></canvas>
         </div>

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}削除確認{% endblock %}
+
+{% block content %}
+<div class="container mx-auto p-6">
+    <h2 class="text-2xl font-bold mb-4 text-red-600">本当に削除しますか？</h2>
+    <p>カテゴリ: {{ expense.category }}</p>
+    <p>金額: {{ expense.amount }}円</p>
+    <p>日付: {{ expense.date }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md shadow-lg">
+            削除
+        </button>
+        <a href="{% url 'expense_list' %}" class="ml-4 text-indigo-600 hover:underline">キャンセル</a>
+    </form>
+</div>
+{% endblock %}
