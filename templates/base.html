@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link href="{% static 'css/output.css' %}" rel="stylesheet">
+    <title>{% block title %}家計簿管理{% endblock %}</title>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+    <!-- ヘッダー -->
+    <header class="bg-blue-600 text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-semibold">家計簿管理</h1>
+            <nav>
+                <ul class="flex space-x-4">
+                    <li><a href="/" class="hover:underline">ホーム</a></li>
+                    {% if user.is_authenticated %}
+                        <li>
+                            <form method="post" action="{% url 'logout' %}">
+                                {% csrf_token %}
+                                <button type="submit" class="text-white hover:underline">ログアウト</button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li><a href="{% url 'login' %}" class="hover:underline">ログイン</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="flex-grow container mx-auto p-6">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- フッター -->
+    <footer class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2024 家計簿管理. All rights reserved.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

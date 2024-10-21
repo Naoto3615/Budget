@@ -1,6 +1,97 @@
-<h2>支出一覧</h2>
-<ul>
-  {% for expense in expenses %}
-    <li>{{ expense.date }} - {{ expense.category }} - {{ expense.amount }}</li>
-  {% endfor %}
-</ul>
+{% extends 'base.html' %}
+
+{% block title %}費用一覧{% endblock %}
+
+{% block content %}
+<div class="container mx-auto p-6">
+    <h2 class="text-3xl font-bold mb-6 text-gray-800">費用一覧</h2>
+
+    <!-- フレックスボックスのレイアウトに変更 -->
+    <div class="flex space-x-6">
+        <!-- 費用一覧 -->
+        <div class="w-1/2">
+            <ul class="space-y-4">
+                {% for expense in expenses %}
+                    <li class="bg-white p-4 rounded-lg shadow-md flex justify-between items-center">
+                        <div>
+                            <p class="text-lg font-semibold text-gray-800">{{ expense.user }}</p>
+                            <p class="text-lg font-semibold text-gray-800">{{ expense.category }}</p>
+                            <p class="text-sm text-gray-600">{{ expense.date }}</p>
+                        </div>
+                        <p class="text-xl font-bold text-indigo-600">{{ expense.amount }}円</p>
+                    </li>
+                {% empty %}
+                    <p class="text-center text-gray-500">費用が登録されていません。</p>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- 円グラフ -->
+        <div class="w-1/2">
+            <h3 class="text-xl font-bold">カテゴリごとの支出</h3>
+            <canvas id="expenseChart" width="400" height="400"></canvas>
+        </div>
+    </div>
+
+    <!-- Chart.jsの読み込み（最新バージョンのCDN） -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.0.1/dist/chart.umd.min.js"></script>
+
+    <script>
+        // DjangoテンプレートからPythonのデータをJavaScriptに渡す
+        const categoryLabels = [
+            {% for total in category_totals %}
+                "{{ total.category__name }}",
+            {% endfor %}
+        ];
+
+        const categoryData = [
+            {% for total in category_totals %}
+                {{ total.total }},
+            {% endfor %}
+        ];
+
+        const ctx = document.getElementById('expenseChart').getContext('2d');
+        const expenseChart = new Chart(ctx, {
+            type: 'doughnut',  // 円グラフのタイプ
+            data: {
+                labels: categoryLabels,  // カテゴリ名
+                datasets: [{
+                    label: 'カテゴリごとの支出',
+                    data: categoryData,  // 金額データ
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                }
+            }
+        });
+    </script>
+
+    <div class="mt-6 text-center">
+        <a href="{% url 'add_expense' %}" class="text-white bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-md shadow-lg">
+            費用を追加
+        </a>
+    </div>
+</div>
+{% endblock %}

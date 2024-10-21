@@ -1,6 +1,54 @@
-<h2>新しい支出を追加</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">追加</button>
-</form>
+{% extends 'base.html' %}
+
+{% block title %}新しい支出を追加{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-br from-indigo-50 to-indigo-100 min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-lg w-full bg-white p-8 rounded-lg shadow-lg">
+        <h2 class="text-3xl font-bold text-center text-indigo-600 mb-6">新しい支出を追加</h2>
+
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+
+            <!-- カテゴリー -->
+            <div>
+                <label for="category" class="block text-sm font-semibold text-gray-700">カテゴリー</label>
+                {{ form.category }}
+                {{ form.category.errors }}
+            </div>
+
+            <!-- 金額 -->
+            <div>
+                <label for="amount" class="block text-sm font-semibold text-gray-700">金額</label>
+                <input type="text" name="amount" id="amount" placeholder="30000"
+{#                    value="{{ form.amount.value }}"#}
+                    class="mt-2 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                {{ form.amount.errors }}
+            </div>
+
+
+
+            <!-- 日付 -->
+            <div>
+                <label for="date" class="block text-sm font-semibold text-gray-700">日付</label>
+                <input type="date" name="date" id="date" value="{{ form.date.value }}" class="mt-2 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                {{ form.date.errors }}
+            </div>
+
+            <!-- 説明 -->
+            <div>
+                <label for="description" class="block text-sm font-semibold text-gray-700">説明</label>
+                <textarea name="description" id="description" class="mt-2 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">{{ form.description.value }}</textarea>
+                {{ form.description.errors }}
+            </div>
+
+            <!-- 追加ボタン -->
+            <div class="flex justify-center">
+                <button type="submit" class="w-full inline-flex justify-center py-3 px-6 border border-transparent shadow-xl text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
+                    追加
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,25 +1,16 @@
-"""
-URL configuration for budget project.
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/dev/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path
 from expenses import views
+from django.contrib.auth import views as auth_views
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('expenses/', views.expense_list, name='expense_list'),
     path('add/', views.add_expense, name='add_expense'),
     path('', views.expense_list, name='expense_list'),
+    path('accounts/login/', auth_views.LoginView.as_view(redirect_authenticated_user = True,template_name='registration/login.html'), name='login'),
+    path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout'),  # カスタムLogoutView
+    path('accounts/signup/', views.signup, name='signup'),
 ]
